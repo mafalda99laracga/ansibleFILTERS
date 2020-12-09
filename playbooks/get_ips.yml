@@ -1,0 +1,9 @@
+---
+- name: Obtain IPs
+  set_fact:
+    ips: "{{ item | regex_findall('\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b') }} "
+
+- name: Add IP
+  set_fact:
+    ips_mutitask: '{{ ips_mutitask }} + {{ ips }}'
+  when: ips|length > 0

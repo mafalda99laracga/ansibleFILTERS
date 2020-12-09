@@ -1,0 +1,27 @@
+#
+# Examples:
+#
+# $ ansible-playbook playbook.yml
+# $ ansible-playbook playbook.yml -t filter
+
+- hosts: localhost
+  connection: local
+  vars:
+    ips_mutitask: []
+  tasks:
+    - name: Get Ips multitask
+      block:
+        - name: Extract IPs
+          include_tasks: ./playbooks/get_ips.yml
+          loop: "{{ lookup('file', './files/ifconfig').splitlines() }}"
+
+        - name: Print ips multitask
+          debug:
+            var: ips_mutitask
+
+    - name: Print ips filter
+      debug:
+        msg: "{{ lookup('file', './files/ifconfig') | get_ips }}"
+      tags:
+        - filter
+        - never
